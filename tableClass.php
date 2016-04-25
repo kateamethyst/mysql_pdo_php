@@ -10,13 +10,13 @@ class TableClass
             $this->DBConn = new PDO("mysql:host=host; dbname=databasename;", 'username', 'password');
             $this->DBConn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch(PDOException $e) {
-                $e->getMessage();
-            }
+            $e->getMessage();
+        }
 
         $this->table = $table;
     }
 
-    function all() 
+    public function all() 
     {
         $query  = $this->DBConn->prepare("SELECT * FROM " . $this->table);
         $query->execute();
@@ -24,7 +24,7 @@ class TableClass
         return $result;
     }
 
-    function find($id)
+    public function find($id)
     {
         $query  = $this->DBConn->prepare("SELECT * FROM " . $this->table . " WHERE id=:id");
         $query->execute(array('id'=> $id));
@@ -32,7 +32,7 @@ class TableClass
         return $result;
     }
 
-    function create($array)
+    public function create($array)
     {
         $fields = implode(',' , array_keys($array));
         $values = implode("' ,'" , array_values($array));
@@ -43,11 +43,11 @@ class TableClass
         return $result;
     }
 
-    function update($id, $array)
+    public function update($id, $array)
     {
         $toBeUpdate = "";
         foreach ($array as $key => $value) {
-        $toBeUpdate = $toBeUpdate . $key . "='" . $value . "',";
+            $toBeUpdate = $toBeUpdate . $key . "='" . $value . "',";
         }
         $toBeUpdate = rtrim($toBeUpdate, ',');
         $query  = $this->DBConn->prepare('UPDATE ' . $this->table . ' SET ' . $toBeUpdate . ' WHERE id=:id');
@@ -55,10 +55,9 @@ class TableClass
         return $result;
     }
 
-    function delete($id)
+    public function delete($id)
     {
         $query  = $this->DBConn->prepare('DELETE FROM ' . $this->table . ' WHERE id=:id');
-        print_r($query);
         $result = $query->execute(array('id' => $id));
         return $result;
     }
